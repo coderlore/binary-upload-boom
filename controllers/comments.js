@@ -3,11 +3,14 @@ const Comment = require("../models/Comment")
 module.exports = {
   createComment: async (req, res) => {
     try {
+      //TODO - add new properties teach documents
       await Comment.create({
         comment: req.body.comment,
         likes: 0,
         // user: req.user.id,
-        post: req.params.id
+        post: req.params.id,
+        createdBy: req.user.userName,
+        createdById: req.user.id
       });
       console.log("Comment has been added!");
       res.redirect("/post/"+req.params.id);
@@ -29,18 +32,14 @@ module.exports = {
 //       console.log(err);
 //     }
 //   },
-//   deletePost: async (req, res) => {
-//     try {
-//       // Find post by id
-//       let post = await Post.findById({ _id: req.params.id });
-//       // Delete image from cloudinary
-//       await cloudinary.uploader.destroy(post.cloudinaryId);
-//       // Delete post from db
-//       await Post.remove({ _id: req.params.id });
-//       console.log("Deleted Post");
-//       res.redirect("/profile");
-//     } catch (err) {
-//       res.redirect("/profile");
-//     }
-//   },
+  deleteComment: async (req, res) => {
+    try {
+      // Delete comment from DB
+      await Comment.deleteOne({_id: req.params.commentid})
+      console.log("Deleted Comment");
+      res.redirect("/post/"+req.params.postid);
+    } catch (err) {
+      console.log
+    }
+  },
 };
